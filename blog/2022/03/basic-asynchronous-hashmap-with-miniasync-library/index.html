@@ -1,13 +1,13 @@
 <!doctype html><html dir=ltr lang=en-us><head>
 <link rel=stylesheet type=text/css href=/css/style.css>
 <meta property="og:title" content="Basic asynchronous hashmap with Miniasync library">
-<meta property="og:description" content="Miniasync library provides a framework for the composition and execution of asynchronous tasks in C. To accommodate different user-defined tasks and various types of data that they take in, libminiasync makes use of macros.
-Using libminiasync for the first time can be challenging. There are multiple examples on the miniasync repo to make it easier. One of them is a hashmap example.
-Hashmap example overview The hashmap example on the Miniasync repository presents a hashmap with a fixed size that allocates memory upon key-value pair insertion.">
+<meta property="og:description" content="Miniasync library provides a framework for the composition and execution of asynchronous tasks in C. In order to accomodate different user-defined tasks and various types of data that they take in, libminiasync makes use of macros.
+Using libminiasync for the first time can be challenging. There are multiple examples on the miniasync repo to make it easier. One of them is hashmap example.
+Creating a future Future is an abstraction of asynchronous task.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://pmem.io/blog/2022/04/basic-asynchronous-hashmap-with-miniasync-library/"><meta property="article:section" content="blog">
-<meta property="article:published_time" content="2022-04-25T10:00:00+00:00">
-<meta property="article:modified_time" content="2022-04-25T10:00:00+00:00">
+<meta property="og:url" content="https://pmem.io/blog/2022/03/basic-asynchronous-hashmap-with-miniasync-library/"><meta property="article:section" content="blog">
+<meta property="article:published_time" content="2022-03-30T15:11:18+02:00">
+<meta property="article:modified_time" content="2022-03-30T15:11:18+02:00">
 <meta charset=utf-8>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
@@ -300,7 +300,7 @@ Hashmap example overview The hashmap example on the Miniasync repository present
 </div>
 <div class=entry-meta>
 <ul>
-<li><i class=icon-calendar3></i> 25 Apr, 2022</li>
+<li><i class=icon-calendar3></i> 30 Mar, 2022</li>
 <li><i class=icon-user></i> Krzysztof Święcicki</li>
 <li>
 <i class=icon-folder-open></i>
@@ -309,28 +309,17 @@ PMDK
 </ul>
 </div>
 <div class="entry-content mt-0">
-<p>Miniasync library provides a framework for the composition and execution of asynchronous
-tasks in C. To accommodate different user-defined tasks and various types of data that they
-take in, libminiasync makes use of macros.</p>
+<p>Miniasync library provides a framework for the composition and execution of
+asynchronous tasks in C. In order to accomodate different user-defined tasks
+and various types of data that they take in, libminiasync makes use of macros.</p>
 <p>Using libminiasync for the first time can be challenging. There are multiple examples
-on the <a href=https://github.com/pmem/miniasync/tree/master/examples>miniasync repo</a> to make it easier. One of them is a
+on the <a href=https://github.com/pmem/miniasync/tree/master/examples>miniasync repo</a> to make it easier. One of them is
 <a href=https://github.com/kswiecicki/libuasync/blob/masync-example-hashmap/examples/hashmap/hashmap.c>hashmap</a> example.</p>
-<h2 id=hashmap-example-overview>Hashmap example overview</h2>
-<p>The hashmap example on the Miniasync repository presents a hashmap with a fixed size that
-allocates memory upon key-value pair insertion. This particular implementation uses
-linear probing for hashmap entry lookup. Linear probing means that whenever we encounter a
-collision when inserting a key-value pair, we will move on to the next hashmap entry until
-we find an unoccupied entry. For the hash function, we use the Austin Appleby <a href=https://en.wikipedia.org/wiki/MurmurHash>MurmurHash3</a>
-64-bit finalizer.</p>
-<p>Each operation associated with hashmap entry insertion, deletion and search is implemented
-using Miniasync <a href=https://github.com/pmem/miniasync/blob/master/doc/miniasync_future.7.md>future</a> API.</p>
 <h2 id=creating-a-future>Creating a future</h2>
-<p>Future is an abstraction of an asynchronous task. Each future has to be defined using
+<p>Future is an abstraction of asynchronous task. Each future has to be created using
 <code>FUTURE(_name, _data_type, _output_type)</code> macro. It takes future name <code>_name</code>,
-input data type <code>_data_type</code> and output data type <code>_output_type</code>. For more information
-about the futures, see <a href=https://github.com/pmem/miniasync/blob/master/doc/miniasync_future.7.md>future</a> manpage on Miniasync github
-repository.</p>
-<p>The <code>lookup</code> future definition from the hashmap example:</p>
+input data type <code>_data_type</code> and output data type <code>_output_type</code>.</p>
+<p>The lookup future definition from the hashmap example:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>struct</span> hashmap_lookup_data {
 	<span style=color:#66d9ef>struct</span> hashmap <span style=color:#f92672>*</span>hm;
 	<span style=color:#66d9ef>uint64_t</span> key;
@@ -341,22 +330,22 @@ repository.</p>
 };
 FUTURE(hashmap_lookup_fut, <span style=color:#66d9ef>struct</span> hashmap_lookup_data,
 		<span style=color:#66d9ef>struct</span> hashmap_lookup_output);
-</code></pre></div><p>The lookup data <code>struct hashmap_lookup_data</code> contains a pointer to hashmap <code>hm</code>, <code>key</code>, and <code>state</code> of the
-searched entry. <code>hm</code> should point to an actual hashmap instance, <code>key</code> is an entry key used in the hash function,
-<code>state</code> indicates whether the lookup function should search for an existing or unoccupied hashmap entry.</p>
-<p>The output data <code>struct hashmap_lookup_output</code> contains a pointer to the hashmap entry <code>hme</code> that points
+</code></pre></div><p>The lookup data <code>struct hashmap_lookup_data</code> contains a pointer to hashmap <code>hm</code>, <code>key</code> and <code>state</code> of the
+searched entry. <code>hm</code> should point to an actual hashmap instance. <code>key</code> is used in hash function. <code>state</code> indicates
+whether lookup function should search for an already existing hashmap entry or an entry that is unoccupied.</p>
+<p>The output data <code>struct hashmap_lookup_output</code> contains a pointer to the hashmap entry <code>hm</code> that points
 to the found hashmap entry.</p>
 <p><code>FUTURE(...)</code> macro defines a <code>struct hashmap_lookup_fut</code> future struct with <code>struct hashmap_lookup_data</code>
 as input data and <code>struct hashmap_lookup_output</code> as output.</p>
 <h2 id=future-task-function>Future task function</h2>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>typedef</span> <span style=color:#66d9ef>enum</span> <span style=color:#a6e22e>future_state</span> (<span style=color:#f92672>*</span>future_task_fn)(<span style=color:#66d9ef>struct</span> future_context <span style=color:#f92672>*</span>context,
 			<span style=color:#66d9ef>struct</span> future_notifier <span style=color:#f92672>*</span>notifier);
-</code></pre></div><p>The future task function contains the actual logic of the future. Every such task implementation
-must conform to the definition above. Future context provides access to the input and output data
-of a particular future.</p>
+</code></pre></div><p>Future task function contains the actual logic of the future. Every such task implementation
+must conform to the definition above. Future context <code>struct future_context</code> provides access
+to the input data as well as output of a particular future.</p>
 <blockquote>
-<p>Notifier feature is not used in the hashmap example, hence it will not be discussed. For more information
-about the notifiers take a look <a href=https://github.com/pmem/miniasync/blob/master/doc/miniasync_future.7.md>here</a>.</p>
+<p>Notifier feature is not used in hashmap example, hence it will be not discussed. For more info about the notifiers take
+a look <a href=https://github.com/pmem/miniasync/blob/master/doc/miniasync_future.7.md>here</a>.</p>
 </blockquote>
 <p>The return value of future task function indicates the state of the future task.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>enum</span> future_state {
@@ -364,9 +353,9 @@ about the notifiers take a look <a href=https://github.com/pmem/miniasync/blob/m
 	FUTURE_STATE_COMPLETE,
 	FUTURE_STATE_RUNNING,
 };
-</code></pre></div><p><code>FUTURE_STATE_IDLE</code> indicates that the future task did not start yet, <code>FUTURE_STATE_COMPLETE</code>
-means that it has already completed, and <code>FUTURE_STATE_RUNNING</code> signalizes that it&rsquo;s still running.</p>
-<p>The <code>lookup</code> future task function:</p>
+</code></pre></div><p><code>FUTURE_STATE_IDLE</code> indicates that the future task has not been run yet, <code>FUTURE_STATE_COMPLETE</code>
+means that it has already completed and <code>FUTURE_STATE_RUNNING</code> signalizes that it&rsquo;s still running.</p>
+<p>The lookup future task function:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>enum</span> future_state
 <span style=color:#a6e22e>hashmap_lookup_impl</span>(<span style=color:#66d9ef>struct</span> future_context <span style=color:#f92672>*</span>ctx,
 		<span style=color:#66d9ef>struct</span> future_notifier <span style=color:#f92672>*</span>notifier)
@@ -423,7 +412,7 @@ set_output:
 	<span style=color:#66d9ef>enum</span> hashmap_entry_state state <span style=color:#f92672>=</span> data<span style=color:#f92672>-&gt;</span>state;
 </code></pre></div><p>We get the pointers to the data and output structures through the <code>ctx</code> parameter
 using <code>future_context_get_data(...)</code> and <code>future_context_get_output(...)</code> functions.
-Data and output types are the same types provided to the <code>FUTURE(...)</code> macro.</p>
+Data and output types are the same types provided to <code>FUTURE(...)</code> macro.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>	<span style=color:#66d9ef>if</span> (key <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>) {
 		printf(<span style=color:#e6db74>&#34;invalid key %&#34;</span> PRIu64 <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, key);
 		<span style=color:#66d9ef>goto</span> set_output;
@@ -440,7 +429,7 @@ Data and output types are the same types provided to the <code>FUTURE(...)</code
 </code></pre></div><p>Then, we perform some checks on the obtained input data. In case one of the checks
 failed, we set the output entry address to <code>NULL</code> and return <code>FUTURE_STATE_COMPLETE</code>.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>int</span> index <span style=color:#f92672>=</span> hashmap_entry_lookup(hm, key, state);
-</code></pre></div><p>Next, we use the obtained input data to find the index of the hashmap entry.</p>
+</code></pre></div><p>Next, we use the input data to find the index of the hashmap entry.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>	<span style=color:#66d9ef>if</span> (index <span style=color:#f92672>==</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>) {
 		<span style=color:#66d9ef>switch</span> (state) {
 			<span style=color:#66d9ef>case</span> HASHMAP_ENTRY_STATE_PRESENT:
@@ -458,86 +447,71 @@ failed, we set the output entry address to <code>NULL</code> and return <code>FU
 	}
 </code></pre></div><p>If searching for the index of an existing entry failed, we proceed similarly to the
 failed check case.</p>
-<p>If we were looking for the index of an unoccupied entry and nothing was found, we return
-<code>FUTURE_STATE_RUNNING</code>. <code>hashmap_lookup_impl</code> will be re-run upon the next poll,
-preserving all the changes made to the data and output.</p>
+<p>If we were looking for the index of an unoccupied entry and it wasn&rsquo;t found, we return
+<code>FUTURE_STATE_RUNNING</code>. <code>hashmap_lookup_impl</code> will then be re-run preserving all
+the changes made to the data and output.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>	hme <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>hm<span style=color:#f92672>-&gt;</span>entries[index];
 set_output:
 	output<span style=color:#f92672>-&gt;</span>hme <span style=color:#f92672>=</span> hme;
 	<span style=color:#66d9ef>return</span> FUTURE_STATE_COMPLETE;
-</code></pre></div><p>Lastly, when we found an entry, we set the output entry pointer to its address and
+</code></pre></div><p>Lastly, when an entry was found, we set the output entry address to the found entry and
 return <code>FUTURE_STATE_COMPLETE</code>.</p>
 <h2 id=initializing-a-future>Initializing a future</h2>
 <p>Having defined the future input, output and task function, we can create an instance of
-the <code>lookup</code> future.</p>
+the lookup future.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> hashmap_lookup_fut
 <span style=color:#a6e22e>hashmap_lookup</span>(<span style=color:#66d9ef>struct</span> hashmap <span style=color:#f92672>*</span>hm, <span style=color:#66d9ef>uint64_t</span> key, <span style=color:#66d9ef>enum</span> hashmap_entry_state state)
 {
 	<span style=color:#66d9ef>struct</span> hashmap_lookup_fut future;
-	<span style=color:#75715e>/* Set input values */</span>
+	<span style=color:#75715e>/* set input values */</span>
 	future.data.hm <span style=color:#f92672>=</span> hm;
 	future.data.key <span style=color:#f92672>=</span> key;
 	future.data.state <span style=color:#f92672>=</span> state;
-	<span style=color:#75715e>/* Set default output value */</span>
+	<span style=color:#75715e>/* set default output value */</span>
 	future.output.hme <span style=color:#f92672>=</span> NULL;
 	FUTURE_INIT(<span style=color:#f92672>&amp;</span>future, hashmap_lookup_impl);
 	<span style=color:#66d9ef>return</span> future;
 }
-</code></pre></div><p>In the above code fragment, we create a <code>struct hashmap_lookup_fut</code> structure and set its input data and
-default output values. After that, we initialize this future and bind it with a <code>hashmap_lookup_impl(...)</code>
-task function using the <code>FUTURE_INIT(...)</code> macro. After those operations, <code>struct hashmap_lookup_fut</code> is
-ready to be polled.</p>
+</code></pre></div><p>The code fragment above creates a lookup future structure, sets its input data and
+default output values. After that, it initializes this future and binds it with a
+<code>hashmap_lookup_impl(...)</code> task function using <code>FUTURE_INIT(...)</code> macro. Futures initialized
+that way are ready for polling.</p>
 <h2 id=creating-a-chained-future>Creating a chained future</h2>
 <p>Multiple futures can be composed into a single chained future. When polled, chained
 future executes its future entries sequentially in the order they were defined.
-We can define a future as the chained future entry using <code>FUTURE_CHAIN_ENTRY(_future_type, _name)</code>
-macro. It takes two parameters, <code>_future_type</code> is the type of the future, and <code>_name</code>
+Future are defined as the chained future entries using <code>FUTURE_CHAIN_ENTRY(_future_type, _name)</code>
+macro. It takes two parameters, <code>_future_type</code> is the type of the future and <code>_name</code>
 is the name of the variable stored in the data structure.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_data {
 	FUTURE_CHAIN_ENTRY(<span style=color:#66d9ef>struct</span> hashmap_lookup_fut, lookup);
 	FUTURE_CHAIN_ENTRY(<span style=color:#66d9ef>struct</span> hashmap_entry_set_state_fut, set_state);
 };
-<span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_output {
-	<span style=color:#66d9ef>struct</span> hashmap_entry <span style=color:#f92672>*</span>hme;
-};
-FUTURE(hashmap_lookup_lock_entry_fut, <span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_data,
-		<span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_output);
-</code></pre></div><p>Here, <code>struct hashmap_lookup_lock_entry_fut</code> future consists of two other futures,
+<p><span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_output {
+<span style=color:#66d9ef>struct</span> hashmap_entry <span style=color:#f92672>*</span>hme;
+};</p>
+<p>FUTURE(hashmap_lookup_lock_entry_fut, <span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_data,
+<span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_output);
+</code></pre></div><p>Here, <code>struct hashmap_lookup_lock_entry_fut</code> future consists of two other futures
 <code>struct hashmap_lookup_fut</code> that was discussed and <code>struct hashmap_entry_set_state_fut</code> that
-follows the same principles the <code>lookup</code> future does. <code>struct hashmap_lookup_lock_entry_fut</code> is
-a chained future responsible for finding an appropriate hashmap entry and locking it in
-<code>HASHMAP_ENTRY_STATE_PROCESSED</code> state. Hashmap entry locking ensures that no other future will
-interact with this hashmap entry until we finish processing it and change its state.</p>
-<p>If we would like to store some additional data in the <code>struct hashmap_lookup_lock_entry_data</code>
-structure, besides the future entries, we can use <code>FUTURE_CHAIN_ENTRY_LAST(_future_type, _name)</code> macro.
-It works as <code>FUTURE_CHAIN_ENTRY(...)</code> macro, but we should use it to define the last future entry.
-Then, we can safely declare some additional data after it. For example, <code>struct hashmap_lookup_lock_entry_data</code>
-would look like this:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_data {
-	FUTURE_CHAIN_ENTRY(<span style=color:#66d9ef>struct</span> hashmap_lookup_fut, lookup);
-	FUTURE_CHAIN_ENTRY_LAST(<span style=color:#66d9ef>struct</span> hashmap_entry_set_state_fut, set_state);
-	<span style=color:#66d9ef>uint64_t</span> additional;
-	<span style=color:#66d9ef>uint64_t</span> data;
-};
-</code></pre></div><blockquote>
-<p>We should declare additional chained future data only after using the <code>FUTURE_CHAIN_ENTRY_LAST(...)</code> macro.</p>
-</blockquote>
+follows the same principles the lookup future does. <code>struct hashmap_lookup_lock_entry_fut</code>
+chained future is responsible for finding an appropriate hashmap entry and locking it in
+<code>HASHMAP_ENTRY_STATE_PROCESSED</code> state. This ensures that no other future will interact with this
+entry until we change its state from the processed state.</p></p>
 <h2 id=initializing-a-chained-future>Initializing a chained future</h2>
 <p>Chained futures are initialized quite differently from regular futures. Each member future
 must be initialized using either <code>FUTURE_CHAIN_ENTRY_INIT(_entry, _fut, _map, _map_arg)</code>
 or <code>FUTURE_CHAIN_ENTRY_LAZY_INIT(_entry, _init, _init_arg, _map, _map_arg)</code> macro.
 We will focus on <code>FUTURE_CHAIN_ENTRY_INIT(...)</code> macro.</p>
 <p><code>FUTURE_CHAIN_ENTRY_INIT(...)</code> takes four parameters. <code>_entry</code> is a pointer to the
-future entry. <code>_fut</code> is an initialized future structure. <code>_map</code> defines the mapping behavior
-of the data between the future currently being initialized and the next future in the chain.
-Mapping function of the last future entry should map the data between this entry and the chained
-future containing it. <code>_map_arg</code> is the mapping function argument.</p>
+future entry. <code>_fut</code> is an initialized future structure. <code>_map</code> defines mapping of
+the data between the future currently being initialized and the next future in the
+chain. <code>_map_arg</code> is the mapping function argument.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_fut
 <span style=color:#a6e22e>hashmap_lookup_lock_entry</span>(<span style=color:#66d9ef>struct</span> hashmap <span style=color:#f92672>*</span>hm, <span style=color:#66d9ef>uint64_t</span> key,
 		<span style=color:#66d9ef>enum</span> hashmap_entry_state state)
 {
 	<span style=color:#66d9ef>struct</span> hashmap_lookup_lock_entry_fut chain;
-	<span style=color:#75715e>/* Initialize chained future entries */</span>
+	<span style=color:#75715e>/* initialize chained future entries */</span>
 	FUTURE_CHAIN_ENTRY_INIT(<span style=color:#f92672>&amp;</span>chain.data.lookup,
 			hashmap_lookup(hm, key, state),
 			lookup_to_set_state_map, NULL);
@@ -545,20 +519,22 @@ future containing it. <code>_map_arg</code> is the mapping function argument.</p
 			hashmap_entry_set_state(NULL, state,
 					HASHMAP_ENTRY_STATE_PROCESSED),
 			set_state_to_output_map, NULL);
-	<span style=color:#75715e>/* Set default chained future output value */</span>
+	<span style=color:#75715e>/* set default output value */</span>
 	chain.output.hme <span style=color:#f92672>=</span> NULL;
-	FUTURE_CHAIN_INIT(<span style=color:#f92672>&amp;</span>chain);
-	<span style=color:#66d9ef>return</span> chain;
-}
-</code></pre></div><p>In this code fragment we create and initialize a <code>struct hashmap_lookup_lock_entry_fut</code>
-future structure and its future entries.</p>
+<pre><code>FUTURE_CHAIN_INIT(&lt;span style=&quot;color:#f92672&quot;&gt;&amp;amp;&lt;/span&gt;chain);
+
+&lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain;
+</code></pre>
+<p>}
+</code></pre></div><p>This code fragment creates and initializes a <code>struct hashmap_lookup_lock_entry_fut</code>
+future structure.</p></p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>FUTURE_CHAIN_ENTRY_INIT(<span style=color:#f92672>&amp;</span>chain.data.lookup,
 			hashmap_lookup(hm, key, state),
 			lookup_to_set_state_map, NULL);
-</code></pre></div><p>We initialize the <code>lookup</code> future entry using <code>FUTURE_CHAIN_ENTRY_INIT(...)</code> macro.
-<code>&chain.data.lookup</code> is an address of the <code>lookup</code> future entry. <code>hashmap_lookup(hm, key, state)</code>
-returns a new, initialized <code>struct hashmap_lookup_fut</code> future. <code>lookup_to_set_state_map</code> maps the
-data from <code>lookup</code> future to the <code>set_state</code> future.</p>
+</code></pre></div><p>In the first entry initialization the <code>&chain.data.lookup</code> is an address of the <code>lookup</code>
+entry, <code>hashmap_lookup(hm, key, state)</code> returns a new <code>struct hashmap_lookup_fut</code> future.
+<code>lookup_to_set_state_map</code> maps the data from <code>lookup</code> future to the <code>set_state</code> future
+and looks like this:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span>
 <span style=color:#a6e22e>lookup_to_set_state_map</span>(<span style=color:#66d9ef>struct</span> future_context <span style=color:#f92672>*</span>lookup_ctx,
 		<span style=color:#66d9ef>struct</span> future_context <span style=color:#f92672>*</span>set_state_ctx, <span style=color:#66d9ef>void</span> <span style=color:#f92672>*</span>arg)
@@ -568,42 +544,41 @@ data from <code>lookup</code> future to the <code>set_state</code> future.</p>
 	<span style=color:#66d9ef>struct</span> hashmap_entry_set_state_data <span style=color:#f92672>*</span>set_state_data <span style=color:#f92672>=</span>
 			future_context_get_data(set_state_ctx);
 	<span style=color:#66d9ef>struct</span> hashmap_entry <span style=color:#f92672>*</span>hme <span style=color:#f92672>=</span> lookup_unoccupied_output<span style=color:#f92672>-&gt;</span>hme;
-	<span style=color:#66d9ef>if</span> (hme <span style=color:#f92672>==</span> NULL) {
-		<span style=color:#75715e>/*
-</span><span style=color:#75715e>		 * Entry lookup failed, no need to lock the entry in
-</span><span style=color:#75715e>		 * &#39;processed&#39; state.
-</span><span style=color:#75715e>		 */</span>
-		set_state_ctx<span style=color:#f92672>-&gt;</span>state <span style=color:#f92672>=</span> FUTURE_STATE_COMPLETE;
-	}
-	set_state_data<span style=color:#f92672>-&gt;</span>hme <span style=color:#f92672>=</span> hme;
-}
-</code></pre></div><p>In the <code>lookup_to_set_state_map</code> mapping function we access the data of <code>lookup</code>
-and <code>set_state</code> futures through their contexts. Then, we check if the <code>lookup</code> future has found a
-hashmap entry. If <code>lookup</code> future didn&rsquo;t find an entry, we mark the <code>set_state</code> future as completed.
-<code>set_state</code> will not be executed when it&rsquo;s marked as completed.
-Lastly, we set the <code>lookup</code> output entry in the <code>set_state</code> input data.</p>
-<p>We initialize the <code>set_state</code> future entry similarly to the <code>lookup</code> future entry.
-<code>set_state</code> is the last entry future, so we map its data onto chained future output.</p>
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; (hme &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; NULL) {
+	&lt;span style=&quot;color:#75715e&quot;&gt;/*
+</code></pre>
+<p></span><span style=color:#75715e> * Entry lookup failed, no need to lock the entry in
+</span><span style=color:#75715e> * 'processed' state.
+</span><span style=color:#75715e> */</span>
+set_state_ctx<span style=color:#f92672>-></span>state <span style=color:#f92672>=</span> FUTURE_STATE_COMPLETE;
+}</p>
+<pre><code>set_state_data&lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt;hme &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; hme;
+</code></pre>
+<p>}
+</code></pre></div><p>In the function above we accesses the data of <code>lookup</code> and <code>set_state</code> through their contexts.
+Then we checks if <code>lookup</code> future has found an entry and marks the <code>set_state</code> future
+as completed when it hasn’t found any entry. <code>set_state</code> will not be executed when its
+marked as completed. Lastly, we set the <code>lookup</code> output entry in the <code>set_state</code> input data.</p></p>
+<p>We initialize the <code>set_state</code> future the same way the <code>lookup</code> future was initialized.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>FUTURE_CHAIN_INIT(<span style=color:#f92672>&amp;</span>chain);
-</code></pre></div><p>After initializing each chained future entry, we initialize the chained future by passing
-its address to the <code>FUTURE_CHAIN_INIT(...)</code> macro. <code>hashmap_lookup_lock_entry_fut</code> future
-is now ready to be polled.</p>
-<h2 id=initializing-chained-future-entries-lazily>Initializing chained future entries lazily</h2>
-<p>We can also initialize chained future entries lazily using
+</code></pre></div><p>After initializing each chain future entry, we initialize the chain future by passing
+its address to the <code>FUTURE_CHAIN_INIT(...)</code> macro. <code>hashmap_lookup_output</code> future is now
+ready to be polled.</p>
+<h2 id=initializing-chained-future-entries-lazly>Initializing chained future entries lazly</h2>
+<p>Chained future entries can also be initialized lazly using
 <code>FUTURE_CHAIN_ENTRY_LAZY_INIT(_entry, _init, _init_arg, _map, _map_arg)</code> macro.
-<code>_entry</code>, <code>_map</code>, and <code>_map_arg</code> parameters are the same as in the <code>FUTURE_CHAIN_ENTRY_INIT(...)</code> macro.
+The <code>_entry</code>, <code>_map</code> and <code>_map_arg</code> parameters are the same as in <code>FUTURE_CHAIN_ENTRY_INIT(...)</code> macro.
 <code>_init</code> is an entry initialization function that has to conform to the
 <code>typedef void (*future_init_fn)(void *future, struct future_context *chain_fut, void *arg)</code> definition,
 <code>_init_arg</code> is the initialization function argument.</p>
 <blockquote>
-<p>Lazily initialized future entry is initialized right before its execution.</p>
+<p>Entries meant to be initialized lazly are initialized right before they are executed.</p>
 </blockquote>
-<p>We can find an example of a lazy entry initialization in the <code>hashmap_get_copy_fut</code> future.</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> hashmap_get_copy_fut
 <span style=color:#a6e22e>hashmap_get_copy</span>(<span style=color:#66d9ef>struct</span> vdm <span style=color:#f92672>*</span>vdm, <span style=color:#66d9ef>struct</span> hashmap <span style=color:#f92672>*</span>hm, <span style=color:#66d9ef>uint64_t</span> key)
 {
 	<span style=color:#66d9ef>struct</span> hashmap_get_copy_fut chain;
-	<span style=color:#75715e>/* Initialize chained future entries */</span>
+	<span style=color:#75715e>/* initialize chained future entries */</span>
 	FUTURE_CHAIN_ENTRY_INIT(<span style=color:#f92672>&amp;</span>chain.data.lookup_lock_entry,
 			hashmap_lookup_lock_entry(hm, key,
 					HASHMAP_ENTRY_STATE_PRESENT), NULL,
@@ -612,15 +587,18 @@ is now ready to be polled.</p>
 			memcpy_value_init, vdm, NULL, NULL);
 	FUTURE_CHAIN_ENTRY_LAZY_INIT(<span style=color:#f92672>&amp;</span>chain.data.set_state,
 			set_state_init_for_get, NULL, NULL, NULL);
-	<span style=color:#75715e>/* Set default output values */</span>
+	<span style=color:#75715e>/* set default output values */</span>
 	chain.output.size <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
 	chain.output.value <span style=color:#f92672>=</span> NULL;
-	FUTURE_CHAIN_INIT(<span style=color:#f92672>&amp;</span>chain);
-	<span style=color:#66d9ef>return</span> chain;
-}
-</code></pre></div><p><code>hashmap_get_copy(...)</code> looks similar to the already discussed <code>hashmap_lookup_lock_entry(...)</code>
-function, except we initialize some of its future entries lazily. We will focus
-on the <code>set_state</code> entry.</p>
+<pre><code>FUTURE_CHAIN_INIT(&lt;span style=&quot;color:#f92672&quot;&gt;&amp;amp;&lt;/span&gt;chain);
+
+&lt;span style=&quot;color:#66d9ef&quot;&gt;return&lt;/span&gt; chain;
+</code></pre>
+<p>}
+</code></pre></div><p>An example of a lazy entry initialization can be found in <code>hashmap_get_copy_fut</code> future.
+<code>hashmap_get_copy(&mldr;)</code> looks similar to the already discussed <code>hashmap_lookup_lock_entry(&mldr;)</code>
+function, except it initializes some of the future entries lazly. We will focus
+on the <code>set_state</code> entry.</p></p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C>FUTURE_CHAIN_ENTRY_LAZY_INIT(<span style=color:#f92672>&amp;</span>chain.data.set_state,
 			set_state_init_for_get, NULL, NULL, NULL);
 </code></pre></div><p>Previously we have used <code>hashmap_entry_set_state(...)</code> to initialize the <code>set_state</code> entry.
@@ -632,38 +610,29 @@ for initializaing the <code>set_state</code> entry.</p>
 {
 	<span style=color:#66d9ef>struct</span> hashmap_get_copy_data <span style=color:#f92672>*</span>data <span style=color:#f92672>=</span>
 			future_context_get_data(hashmap_get_copy_ctx);
-	<span style=color:#66d9ef>struct</span> hashmap_entry_set_state_fut fut <span style=color:#f92672>=</span> {.output.changed <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>};
-	<span style=color:#66d9ef>struct</span> hashmap_entry <span style=color:#f92672>*</span>hme <span style=color:#f92672>=</span> data<span style=color:#f92672>-&gt;</span>lookup_lock_entry.fut.output.hme;
-	<span style=color:#66d9ef>if</span> (hme <span style=color:#f92672>==</span> NULL) {
-		<span style=color:#75715e>/*
-</span><span style=color:#75715e>		 * &#39;lookup_lock_entry&#39; future entry failed to find a hashmap
-</span><span style=color:#75715e>		 * entry. &#39;set_state&#39; future entry shouldn&#39;t be executed.
-</span><span style=color:#75715e>		 */</span>
-		FUTURE_INIT_COMPLETE(<span style=color:#f92672>&amp;</span>fut);
-	} <span style=color:#66d9ef>else</span> {
-		<span style=color:#75715e>/*
-</span><span style=color:#75715e>		 * &#39;lookup_lock_entry&#39; was successful.
-</span><span style=color:#75715e>		 * Set hashmap entry state to &#39;present&#39;.
-</span><span style=color:#75715e>		 */</span>
-		fut <span style=color:#f92672>=</span> hashmap_entry_set_state(hme,
-				HASHMAP_ENTRY_STATE_PROCESSED,
-				HASHMAP_ENTRY_STATE_PRESENT);
-	}
-	memcpy(future, <span style=color:#f92672>&amp;</span>fut, <span style=color:#66d9ef>sizeof</span>(fut));
+<pre><code>&lt;span style=&quot;color:#66d9ef&quot;&gt;struct&lt;/span&gt; hashmap_entry_set_state_fut fut &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; {.output.changed &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color:#ae81ff&quot;&gt;0&lt;/span&gt;};
+&lt;span style=&quot;color:#66d9ef&quot;&gt;struct&lt;/span&gt; hashmap_entry &lt;span style=&quot;color:#f92672&quot;&gt;*&lt;/span&gt;hme &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; data&lt;span style=&quot;color:#f92672&quot;&gt;-&amp;gt;&lt;/span&gt;lookup_lock_entry.fut.output.hme;
+&lt;span style=&quot;color:#66d9ef&quot;&gt;if&lt;/span&gt; (hme &lt;span style=&quot;color:#f92672&quot;&gt;==&lt;/span&gt; NULL) {
+	&lt;span style=&quot;color:#75715e&quot;&gt;/* Entry wasn&amp;#39;t found, entry state shouldn&amp;#39;t be changed */&lt;/span&gt;
+	FUTURE_INIT_COMPLETE(&lt;span style=&quot;color:#f92672&quot;&gt;&amp;amp;&lt;/span&gt;fut);
+} &lt;span style=&quot;color:#66d9ef&quot;&gt;else&lt;/span&gt; {
+	&lt;span style=&quot;color:#75715e&quot;&gt;/* Entry value was copied, set entry state to &amp;#39;present&amp;#39; */&lt;/span&gt;
+	fut &lt;span style=&quot;color:#f92672&quot;&gt;=&lt;/span&gt; hashmap_entry_set_state(hme,
+			HASHMAP_ENTRY_STATE_PROCESSED,
+			HASHMAP_ENTRY_STATE_PRESENT);
 }
-</code></pre></div><p>In the <code>set_state_init_for_get</code> function, we get the output from the <code>lookup_lock_entry</code>
-future entry and check if we found and locked a valid hashmap entry. We want to omit the
-<code>set_state</code> future entry execution when <code>lookup_lock_entry</code> output is invalid. In that case, we
-use the <code>FUTURE_INIT_COMPLETE(_futurep)</code> macro to mark the <code>set_state</code> future as completed.
-In case the <code>lookup_lock_entry</code> future output is valid, we call the <code>hashmap_entry_set_state(...)</code>
-function with appropriate parameters. Finally, we copy the initialized future <code>fut</code> to the
-address pointed by the <code>future</code> parameter using the <code>memset(...)</code> function. <code>future</code> points to the
-future entry that we are currently initializing.</p>
-<h2 id=summary>Summary</h2>
-<p>In summary, we have covered the future creation and initialization. We have also discussed the
-concept of chained futures and how we should initialize their entries. Lastly, we have talked
-over the lazy future initialization.</p>
-<p>For more information about the Miniasync library, see its <a href=https://github.com/pmem/miniasync>GitHub repository</a>.</p>
+
+memcpy(future, &lt;span style=&quot;color:#f92672&quot;&gt;&amp;amp;&lt;/span&gt;fut, &lt;span style=&quot;color:#66d9ef&quot;&gt;sizeof&lt;/span&gt;(fut));
+</code></pre>
+<p>}
+</code></pre></div><p><code>future</code> is a pointer to the future entry being initialized, <code>hashmap_get_copy_ctx</code>
+is a context of the chained future. We get the output from the <code>lookup_lock_entry</code>
+future entry and check for a valid hashmap entry. When a future is initialized using
+<code>FUTURE_INIT_COMPLETE(_futurep)</code> macro its marked as an already complete future.
+We use it here to avoid executing <code>set_state</code> when the output from <code>lookup_lock_entry</code>
+is not valid. In case the output is valid, we create this the future using
+<code>hashmap_entry_set_state(&mldr;)</code> function that was mentioned before. Finally, we copy the
+initialized future to the address pointed by <code>future</code>.</p></p>
 <div class="tagcloud clearfix bottommargin">
 <a href=https://pmem.io/tags/miniasync>miniasync</a>
 <a href=https://pmem.io/tags/concurrency>concurrency</a>
@@ -674,15 +643,15 @@ over the lazy future initialization.</p>
 <div class="si-share border-0 d-flex justify-content-between align-items-center">
 <span>Share this Post:</span>
 <div id=share-buttons>
-<div class="social-icon si-borderless si-facebook" title="Share this on Facebook" onclick="window.open('http://www.facebook.com/share.php?u=https://pmem.io/blog/2022/04/basic-asynchronous-hashmap-with-miniasync-library/')">
+<div class="social-icon si-borderless si-facebook" title="Share this on Facebook" onclick="window.open('http://www.facebook.com/share.php?u=https://pmem.io/blog/2022/03/basic-asynchronous-hashmap-with-miniasync-library/')">
 <i class=icon-facebook></i>
 <i class=icon-facebook></i>
 </div>
-<div class="social-icon si-borderless si-twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/intent/tweet?text=Basic asynchronous hashmap with Miniasync library&url=https://pmem.io/blog/2022/04/basic-asynchronous-hashmap-with-miniasync-library/')">
+<div class="social-icon si-borderless si-twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/intent/tweet?text=Basic asynchronous hashmap with Miniasync library&url=https://pmem.io/blog/2022/03/basic-asynchronous-hashmap-with-miniasync-library/')">
 <i class=icon-twitter></i>
 <i class=icon-twitter></i>
 </div>
-<div class="social-icon si-borderless si-linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https://pmem.io/blog/2022/04/basic-asynchronous-hashmap-with-miniasync-library/&title=&summary=&source=')">
+<div class="social-icon si-borderless si-linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https://pmem.io/blog/2022/03/basic-asynchronous-hashmap-with-miniasync-library/&title=&summary=&source=')">
 <i class=icon-linkedin></i>
 <i class=icon-linkedin></i>
 </div>
@@ -690,7 +659,7 @@ over the lazy future initialization.</p>
 <i class=icon-pinterest></i>
 <i class=icon-pinterest></i>
 </div>
-<div class="social-icon si-borderless si-email3" title="Share this through Email" onclick="window.open('mailto:?&body=https://pmem.io/blog/2022/04/basic-asynchronous-hashmap-with-miniasync-library/')">
+<div class="social-icon si-borderless si-email3" title="Share this through Email" onclick="window.open('mailto:?&body=https://pmem.io/blog/2022/03/basic-asynchronous-hashmap-with-miniasync-library/')">
 <i class=icon-email3></i>
 <i class=icon-email3></i>
 </div>
