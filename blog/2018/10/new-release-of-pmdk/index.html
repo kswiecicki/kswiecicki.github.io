@@ -447,7 +447,7 @@ pools that were created using any of the previous libpmemobj versions, and had
 unrecovered operations in the log, are not going to be compatible with the new
 algorithms.</p>
 <p>To provide users with an upgrade path, we&rsquo;ve implemented a brand new
-<a href=/pmdk-convert/pmdk-convert.1.html>pmdk-convert</a> tool which will
+<a href=/pmdk-convert/manpages/master/pmdk-convert.1.html>pmdk-convert</a> tool which will
 automatically process the logs using the correct recovery
 mechanism, and then will bump the major layout version to indicate that the pool
 can be now opened using the new library version.</p>
@@ -464,7 +464,7 @@ libpmemobj-specific semantics.</p>
 anticipating that it&rsquo;s soon going to become a much larger project.</p>
 <p>We started the containers work easy, with <code>pmem::obj::array</code> that provides some
 convenience features for use with transactions. See our
-<a href=/libpmemobj-cpp/master/doxygen/structpmem_1_1obj_1_1experimental_1_1array.html>doxygen</a> documentation for more info.</p>
+<a href=/libpmemobj-cpp/master/doxygen/structpmem_1_1obj_1_1array.html>doxygen</a> documentation for more info.</p>
 <p>We&rsquo;ve also renamed some function names that, in retrospect, were chosen
 poorly. Functions with old names are still there, but are deprecated.
 If you&rsquo;ve been using libpmemobj-cpp, you should start seeing compile-time
@@ -559,9 +559,12 @@ in-depth description of the algorithms that underpin PMDK.</p>
 <a href=/tags/async class=block role=button>async</a>
 <a href=/tags/asynchronous class=block role=button>asynchronous</a>
 <a href=/tags/concurrency class=block role=button>concurrency</a>
+<a href=/tags/dml class=block role=button>dml</a>
+<a href=/tags/dsa class=block role=button>dsa</a>
 <a href=/tags/faq class=block role=button>faq</a>
 <a href=/tags/imdb class=block role=button>imdb</a>
 <a href=/tags/miniasync class=block role=button>miniasync</a>
+<a href=/tags/pmem2 class=block role=button>pmem2</a>
 <a href=/tags/sanitize class=block role=button>sanitize</a>
 <a href=/tags/secure-erase class=block role=button>secure-erase</a>
 <a href=/tags/sql class=block role=button>sql</a>
@@ -574,9 +577,6 @@ in-depth description of the algorithms that underpin PMDK.</p>
 <a href=/tags/destroy class=block role=button>destroy</a>
 <a href=/tags/developer class=block role=button>developer</a>
 <a href=/tags/direct-access class=block role=button>direct-access</a>
-<a href=/tags/dml class=block role=button>dml</a>
-<a href=/tags/dsa class=block role=button>dsa</a>
-<a href=/tags/emulate class=block role=button>emulate</a>
 </div>
 </div>
 </div>

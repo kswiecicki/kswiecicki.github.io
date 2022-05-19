@@ -341,7 +341,7 @@ doesn&rsquo;t have to contain both memory (typically DRAM) and a processing unit
 For example, we can have a memory-only NUMA Node (hot-plugged memory device), which cannot generate memory requests and contains only memory.</p>
 <p>Today&rsquo;s hardware used in platforms is constantly evolving with a broad spectrum of device changes on each level: previously mentioned
 <code>processing units</code>, come in the form of, e.g., CPU, GPU, or FPGA. The <code>storage class devices</code> in the form of, e.g., HDD or <a href=https://www.intel.com/content/www/us/en/products/memory-storage/solid-state-drives/data-center-ssds/optane-dc-ssd-series.html>SSD</a>.
-Finally, the <code>memory class devices</code> are provided by physical mediums like DRAM, PMEM, or <a href=https://software.intel.com/content/www/us/en/develop/blogs/an-intro-to-mcdram-high-bandwidth-memory-on-knights-landing.html>MCDRAM</a>.</p>
+Finally, the <code>memory class devices</code> are provided by physical mediums like DRAM, PMEM, or <a href=https://www.intel.com/content/www/us/en/developer/articles/technical/multi-channel-dram-mcdram-and-high-bandwidth-memory-hbm.html>MCDRAM</a>.</p>
 <p>This post focuses on the last aspect of mentioned varieties - on <strong>heterogeneous memory</strong>.</p>
 <figure class=image>
 <img src=/images/posts/heterogeneous_architecture.png alt="PMEM KMEM-DAX">
@@ -552,26 +552,6 @@ The support for them is available in the Linux Kernel 5.5.</p>
 <div class="grid-inner row align-items-center gutter-20">
 <div class=col-4>
 <div class=entry-image>
-<a href=https://pmem.io/blog/2020/01/introduction-to-libmemkind/ data-lightbox=image><img src=/images/pmem_logo.png alt="Introduction to libmemkind"></a>
-</div>
-</div>
-<div class=col-8>
-<div class="entry-title title-xs">
-<h3><a href=https://pmem.io/blog/2020/01/introduction-to-libmemkind/>Introduction to libmemkind</a></h3>
-</div>
-<div class=entry-meta>
-<ul>
-<li><i class=icon-user></i> Jschmieg</li>
-<li><i class=icon-calendar3></i> 20 Jan, 2020</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="entry col-12 col-md-6">
-<div class="grid-inner row align-items-center gutter-20">
-<div class=col-4>
-<div class=entry-image>
 <a href=https://pmem.io/blog/2020/01/memkind-support-for-kmem-dax-option/ data-lightbox=image><img src=/images/pmem_logo.png alt="Memkind support for KMEM DAX option"></a>
 </div>
 </div>
@@ -582,6 +562,26 @@ The support for them is available in the Linux Kernel 5.5.</p>
 <div class=entry-meta>
 <ul>
 <li><i class=icon-user></i> Michalbiesek</li>
+<li><i class=icon-calendar3></i> 20 Jan, 2020</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="entry col-12 col-md-6">
+<div class="grid-inner row align-items-center gutter-20">
+<div class=col-4>
+<div class=entry-image>
+<a href=https://pmem.io/blog/2020/01/introduction-to-libmemkind/ data-lightbox=image><img src=/images/pmem_logo.png alt="Introduction to libmemkind"></a>
+</div>
+</div>
+<div class=col-8>
+<div class="entry-title title-xs">
+<h3><a href=https://pmem.io/blog/2020/01/introduction-to-libmemkind/>Introduction to libmemkind</a></h3>
+</div>
+<div class=entry-meta>
+<ul>
+<li><i class=icon-user></i> Jschmieg</li>
 <li><i class=icon-calendar3></i> 20 Jan, 2020</li>
 </ul>
 </div>
@@ -608,9 +608,12 @@ The support for them is available in the Linux Kernel 5.5.</p>
 <a href=/tags/async class=block role=button>async</a>
 <a href=/tags/asynchronous class=block role=button>asynchronous</a>
 <a href=/tags/concurrency class=block role=button>concurrency</a>
+<a href=/tags/dml class=block role=button>dml</a>
+<a href=/tags/dsa class=block role=button>dsa</a>
 <a href=/tags/faq class=block role=button>faq</a>
 <a href=/tags/imdb class=block role=button>imdb</a>
 <a href=/tags/miniasync class=block role=button>miniasync</a>
+<a href=/tags/pmem2 class=block role=button>pmem2</a>
 <a href=/tags/sanitize class=block role=button>sanitize</a>
 <a href=/tags/secure-erase class=block role=button>secure-erase</a>
 <a href=/tags/sql class=block role=button>sql</a>
@@ -623,9 +626,6 @@ The support for them is available in the Linux Kernel 5.5.</p>
 <a href=/tags/destroy class=block role=button>destroy</a>
 <a href=/tags/developer class=block role=button>developer</a>
 <a href=/tags/direct-access class=block role=button>direct-access</a>
-<a href=/tags/dml class=block role=button>dml</a>
-<a href=/tags/dsa class=block role=button>dsa</a>
-<a href=/tags/emulate class=block role=button>emulate</a>
 </div>
 </div>
 </div>

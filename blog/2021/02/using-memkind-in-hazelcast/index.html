@@ -382,7 +382,7 @@ greater capacities than that of DRAM DIMMs. Therefore, the total achievable capa
 with DRAM modules alone, while the modules operate with near-DRAM performance, at a lower cost per gigabyte.
 These advantages make the Intel Optane PMem modules a good fit for Hazelcast and after some research,
 Hazelcast 4.0 added support for these persistent memory modules - in addition to DRAM - as its HD backend.
-The initial implementation in 4.0 used <a href=/pmdk/libvmem/>libvmem</a> for using Intel Optane persistent
+The initial implementation in 4.0 used <a href=/vmem/libvmem/>libvmem</a> for using Intel Optane persistent
 memory modules in volatile App Direct Mode. Since then, Memkind became the go-to library
 for using the PMem in volatile mode, therefore, Hazelcast dropped libvmem
 and replaced it with Memkind in its 4.1 version.</p>
@@ -674,9 +674,12 @@ capacities of memory than possible before, all with a lower cost for the end use
 <a href=/tags/async class=block role=button>async</a>
 <a href=/tags/asynchronous class=block role=button>asynchronous</a>
 <a href=/tags/concurrency class=block role=button>concurrency</a>
+<a href=/tags/dml class=block role=button>dml</a>
+<a href=/tags/dsa class=block role=button>dsa</a>
 <a href=/tags/faq class=block role=button>faq</a>
 <a href=/tags/imdb class=block role=button>imdb</a>
 <a href=/tags/miniasync class=block role=button>miniasync</a>
+<a href=/tags/pmem2 class=block role=button>pmem2</a>
 <a href=/tags/sanitize class=block role=button>sanitize</a>
 <a href=/tags/secure-erase class=block role=button>secure-erase</a>
 <a href=/tags/sql class=block role=button>sql</a>
@@ -689,9 +692,6 @@ capacities of memory than possible before, all with a lower cost for the end use
 <a href=/tags/destroy class=block role=button>destroy</a>
 <a href=/tags/developer class=block role=button>developer</a>
 <a href=/tags/direct-access class=block role=button>direct-access</a>
-<a href=/tags/dml class=block role=button>dml</a>
-<a href=/tags/dsa class=block role=button>dsa</a>
-<a href=/tags/emulate class=block role=button>emulate</a>
 </div>
 </div>
 </div>
